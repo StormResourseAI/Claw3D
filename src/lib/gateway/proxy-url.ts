@@ -1,11 +1,14 @@
-const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
+const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
 
 export const resolveStudioProxyGatewayUrl = (upstreamGatewayUrl?: string): string => {
   const raw = typeof upstreamGatewayUrl === "string" ? upstreamGatewayUrl.trim() : "";
   if (raw) {
     try {
       const parsed = new URL(raw);
-      if (LOOPBACK_HOSTS.has(parsed.hostname)) {
+      if (
+        LOOPBACK_HOSTS.has(parsed.hostname) &&
+        LOOPBACK_HOSTS.has(window.location.hostname)
+      ) {
         return raw;
       }
     } catch {
